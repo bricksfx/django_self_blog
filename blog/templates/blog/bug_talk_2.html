@@ -1,0 +1,216 @@
+{% extends "blog/base.html" %}
+{% load staticfiles %}
+
+{% block modal %}
+    <a href="#new_button_href"><button id="new_bug" class="btn btn-info btn-lg" style="margin-bottom: 35px">发现本站新的bug</button></a>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">回复。。。</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="id_name" class="control-label">绰号：</label>
+                            <div class="sr-only" id="miss_name" role="alert">
+                                <p>绰号不能为空</p>
+                            </div>
+                            <input type="text" class="form-control" id="id_name" placeholder="请输入您的绰号">
+                        </div>
+                        <div class="form-group">
+                            <label for="id_content" class="control-label">内容:</label>
+                            <div class="sr-only" id="miss_content" role="alert">
+                                <p>评论内容不能为空</p>
+                            </div>
+                            <textarea class="form-control" id="id_content" placeholder="请输入您发现的bug"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="submit" id="comment-submit" class="btn btn-primary">评论</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block title %}bricks_blog{% endblock %}
+{% block article %}
+    {% for bug in bugs %}
+    <article class="post tag-about-ghost tag-ghost-in-depth tap-zhu-shou-han-shu" id="bug_{{ bug.id }}">
+       <div class="container">
+           <div class="bug-one-person" style="border-bottom: dotted #c5c5c5 1px">
+               <div class="row">
+                   <div class="col-md-1" style="background-color:#fafbfc">
+                       <div class="head-img">
+                           <img src="{% static 'images/figure.png' %}" width="60px" height="60px" style="float: inherit">
+                       </div>
+                       <div class="nick-name" style="text-align: center;">
+                           <span >{{ bug.nick_name }}</span>
+                       </div>
+                   </div>
+                   <div class="col-md-6">
+                       <div class="bug-content">
+                            <p>{{ bug.content }}</p>
+                       </div>
+                   </div>
+
+               </div>
+               <div class="row">
+                   <div class="col-md-7">
+                       <div class="bug-footer pull-right" style="margin-bottom:10px">
+                            <span style="margin-right: 20px">{{ bug.pub_data | date:"Y-m-d H:i" }}</span>
+                            <button class="btn btn-info btn-sm" id="btnTop {{ bug.id }}" data-toggle="modal" data-target="#myModal">回复</button>
+                       </div>
+                   </div>
+               </div>
+           </div>
+
+           <div class="container">
+           {% for comment in bug.bugtalkinline_set.all %}
+               <div class="inline-replay" style="margin-top: 10px; border-bottom:dotted #c5c5c5 1px;">
+                   <div class="row">
+                       <div class="col-md-1">
+                            <div class="inline-information">
+                                <img src="{% static 'images/pbricks.png' %}" width="50px" height="50px"/>
+                            </div>
+                       </div>
+                       <div class="col-md-6">
+                           <div class="inline-comtent">
+                               回复<span style="color:#eb9316">{{ comment.name_pre }}：</span>
+                               <p>{{ comment.content }}</p>
+                           </div>
+                       </div>
+                   </div>
+                   <div class="row">
+                       <div class="inline-footer">
+                           <div class="col-md-7">
+                               <div class="replay-information">
+                                   <p><span style="color:#eb9316">{{ comment.nick_name }}</span></p>
+                               </div>
+                               <div class="date-replay pull-right" style="margin-bottom: 10px">
+                                   <span>{{ comment.pub_data | date:"Y-m-d H:i" }}</span>
+                                   <button class="btn btn-info btn-xs" id="btnInline {{ bug.id }} {{ comment.id }}" data-toggle="modal" data-target="#myModal">回复</button>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           {% endfor %}
+           </div>
+       </div>
+    </article>
+    {% endfor %}
+{% endblock %}
+
+{% block comment %}
+    <div class="col-xs-12 col-md-8 comment">
+        <a name="new_button_href"></a>
+        <div class="comments_body" id="comment_form">
+            <div class="comments_nav"><h2>您发现的的bug</h2></div>
+            <div class="comments-content">
+            <form class="form-horizontal" method="post" id="cmt_sub_form">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label class="control-label" for="id_name">绰号</label>
+                    <input type="text" id="id_name" class="form-control" name="name" required="required" placeholder="请输入您的nickname"/>
+                </div>
+                <a name="newcomment" id="newcomment"></a>
+                <div class="form-group">
+                    <label class="control-label" for="id_comment">bug描述</label>
+                    <textarea class="form-control" row="5" id="id_comment" name="comment" placeholder="请输入您发现的bug" required="required"></textarea>
+                </div>
+                <p style="display:none"><label for="id_honeypot">如果你在该字段输入任何内容，您的评论会被视为垃圾评论</label><input type="text" name="honeypot" id="id_honeyot"></p>
+                <div class="form-actions">
+                    <button class="btn btn-info" id="submit_btn" type="submit" >提交</button>
+                    <br/>
+                </div>
+            </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script>
+        $(document).ready(function(){
+            $.ajaxSetup({
+                 data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
+            });
+
+            $("button[id^='btn']").on('click',function(){
+                var string=$(this).attr("id").split(' ');
+                var data_to_server;
+                if (string[0] == "btnTop") {
+                    var type = 0;
+                    var parent_bug = string[1];
+                    data_to_server = {type:type, parent_bug:parent_bug};
+                }
+                else{
+                    var type=1;
+                    var parent_bug = string[1];
+                    var comment_bug = string[2];
+                    data_to_server = {type:type, parent_bug:parent_bug};
+
+                }
+                $("#myModal #comment-submit").on('click', function(){
+
+                    $.ajax({
+                        type:"POST",
+                        data:data_to_server,
+                        url:"{% url 'blog:bug_submit_inline' %}",
+                        catch:false,
+                        dataType:"html",
+                        success: function(result){
+                            alert(result);
+                        },
+                        error: function (result) {
+                            alert("false" + result);
+                        }
+                    });
+                return false;
+                });
+            });
+
+            $("#comment_form form").submit(function(){
+                $("#comment_form form #submit_btn").attr('disabled', 'disabled');
+                $("#comment_form form #submit_btn").html('<span class="glyphicon glyphicon-hourglass" aria-hidden="true"></span>提交中')
+                var name=$("#comment_form form #id_name").val();
+                var content=$("#comment_form form #id_comment").val();
+                $.ajax({
+                    type:"POST",
+                    data: {name:name, content:content},
+                    url: "{% url 'blog:bug_submit' %}",
+                    cache: false,
+                    dataType: "html",
+                    success: function(result, statues, xml){
+                        if (result == "false"){
+                            alert("提交出现问题");
+                        }
+                        else {
+                            alert("提交成功");
+                            $("#id_article").replaceWith(result);
+                            $("#comment_form form #id_comment").val("");
+                            $("#comment_form form #id_name").val("");
+                        }
+                    },
+                    error: function(){
+                        alert("false");
+                    }
+                });
+                $("#comment_form form #submit_btn").removeAttr('disabled', 'disabled');
+                $("#comment_form form #submit_btn").html("提交");
+                return false;
+            });
+        });
+    </script>
+{% endblock %}
+

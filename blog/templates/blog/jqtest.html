@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        .important{
+            font-weight:bold;
+            font-size:xx-large;
+        }
+        .blue{
+            color: darkorange;
+        }
+    </style>
+    {% load staticfiles %}
+    <script src={% static 'jquery/jquery.min.js' %}></script>
+    <script>
+        $(document).ready(function(){
+            $.ajaxSetup({
+                 data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
+            });
+            $('#btn1').click(function(){
+                alert("Text " +$(".p1").text());
+            });
+            $('#btn2').click(function(){
+                alert("Html: " + $(".p1").html());
+            });
+            $('#btn3').click(function(){
+                alert("输入值: " + $("#value").val());
+            });
+            $('#btn4').click(function(){
+                alert("获得href内容: " + $("#attrtest").attr("href"));
+            });
+            $('#btn5').click(function(){
+                $("#test").text("茄子又被。。。了");
+            });
+            $("#btn6").click(function(){
+                $(".p1").html("<b>茄子再次被...了</b>");
+            });
+            $("#btn7").click(function(){
+                $("#value").val("茄子我都不说了");
+            });
+            $("#btn8").click(function(){
+                $("#attrtest p").text("改为bootstrap链接");
+                $("#attrtest").attr("href", "http://www.bootcss.com");
+            });
+            $("#btn9").click(function(){
+                $("#test2").text(function(i, orig){
+                    return "旧文本: " + orig + " 新文本: " + "茄子";
+                });
+            });
+            $("#btn10").click(function(){
+                $("#test3").html(function(i, orig){
+                    return "旧html " + orig + "新文本 " + "加粗过的<b>茄子</b>"
+                });
+            });
+            $("#btn11").click(function(){
+                $("#remove").remove();
+                $("#append").append("尼玛");
+                alert("靠 老子真的被删除了");
+            });
+            $("#btn00").click(function(){
+                $("h1, h2, p").addClass("blue");
+                $("div").addClass("important");
+            })
+            $("#btn12").click(function(){
+                $("h1, h2, p").toggleClass("blue");
+                $("div").toggleClass("important");
+            })
+            $("#btn13").click(function(){
+                $("#photo").load("{% static 'test.txt' %}", function(responseTxt, statusTxt, xhr){
+                    if(statusTxt=="success")
+                        alert("加载成功");
+                    if(statusTxt=="error")
+                        alert("错误: " + xhr.status + ": " + xhr.statusText)
+                });
+            });
+
+            $('#btn15').click(function(){
+                $.post("{% url 'blog:jqpost' %}",
+                        {
+                            name:"bricks",
+                            city:"shenyang"
+                        },
+                function(data, status){
+                    alert("数据" + data + "\n状态" + status);
+                });
+            });
+            $('#formadd').submit(function(){
+                name = $("#id_name").val();
+                password = $("#id_password").val();
+
+                $.ajax({
+                    type:"POST",
+                    data: {name:name, password:password},
+                    url: "{% url 'blog:comments_upload' %}",
+                    cache: false,
+                    dataType: "html",
+                    success: function(result, statues, xml){
+                        alert(result);
+                    },
+                    error: function(){
+                        alert("false");
+                    }
+                });
+                return false;
+            });
+
+        });
+    </script>
+</head>
+<body>
+    <button id="btn1">Show Text</button>
+    <button id="btn2">Show Html</button>
+    <button id="btn3">show value</button>
+    <button id="btn4">show attr</button>
+    <p>test</p>
+    <p class="p1">this is some <b>bold</b> text in a paragraph</p>
+    <p id="test">test</p>
+    <p>Name:<input type="text" id="value" value="板砖"> </p>
+    <a href="http://www.baidu.com" id="attrtest"><p>百度链接</p></a>
+    <button id="btn5">set Text</button>
+    <button id="btn6">Set Html</button>
+    <button id="btn7">set value</button>
+    <button id="btn8">set attr</button>
+    <p id="test2">这是一个<b>加粗过</b>的段落</p>
+    <p id="test3">另一个<b>加粗</b>的段落</p>
+    <button id="btn9">展示 旧/新 文本</button>
+    <button id="btn10">展示 旧/新html</button>
+    <br/>
+    <p id="append"></p>
+    <button id="remove">我是要被和谐的选手</button>
+    <br>
+    <button id="btn11">删除</button>
+    <h1>Heading 1</h1>
+    <h2>Heading 2</h2>
+    <p>This is a paragraph.</p>
+    <p>This is another paragraph.</p>
+    <div>This is some important text!</div>
+    <br>
+    <button id="btn00">Add classes to elements</button>
+    <button id="btn12">移除效果</button>
+    <button id="btn13">高等button</button>
+    <p id="photo"></p>
+    <br>
+    <p id="jqget"></p>
+    <button id="btn14">放大招了</button>
+
+    <button id="btn15">用post提交数据</button>
+    <br/>
+    <br/>
+    <h1>let's do some thing realy work</h1>
+    <p>first add the csrf token</p>
+    <h2>as you can see we did it</h2>
+    <h2>next add the form test</h2>
+    <form method="post" id="formadd">
+        {% csrf_token %}
+        <label for="id_name">用户名</label>
+        <input type="text" id="id_name"/>
+        <label for = "id_password">密码</label>
+        <input type="password" id="id_password"/>
+        <button type="submit" id="submit" >提交</button>
+    </form>
+    <br/>
+    <br/>
+    <br/>
+</body>
+</html>

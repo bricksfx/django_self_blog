@@ -1,0 +1,68 @@
+{% load staticfiles %}
+<div class="col-md-8 col-xs-12" id="id_article">
+   {% for bug in bugs %}
+   <article class="post tag-about-ghost tag-ghost-in-depth tap-zhu-shou-han-shu" id="bug_{{ bug.id }}">
+       <div class="container">
+           <div class="bug-one-person" style="border-bottom: dotted #c5c5c5 1px">
+               <div class="row">
+                   <div class="col-md-1" style="background-color:#fafbfc">
+                       <div class="head-img">
+                           <img src="{% static 'images/figure.png' %}" width="60px" height="60px" style="float: inherit">
+                       </div>
+                       <div class="nick-name" style="text-align: center;">
+                           <span >{{ bug.nick_name }}</span>
+                       </div>
+                   </div>
+                   <div class="col-md-6">
+                       <div class="bug-content">
+                            <p>{{ bug.content }}</p>
+                       </div>
+                   </div>
+
+               </div>
+               <div class="row">
+                   <div class="col-md-7">
+                       <div class="bug-footer pull-right" style="margin-bottom:10px">
+                            <span style="margin-right: 20px">{{ bug.pub_data | date:"Y-m-d H:i" }}</span>
+                            <button class="btn btn-info btn-sm" id="btnTop {{ bug.id }}" data-toggle="modal" data-target="#myModal">回复</button>
+                       </div>
+                   </div>
+               </div>
+           </div>
+
+           <div class="container">
+           {% for comment in bug.bugtalkinline_set.all %}
+               <div class="inline-replay" style="margin-top: 10px; border-bottom:dotted #c5c5c5 1px;">
+                   <div class="row">
+                       <div class="col-md-1">
+                            <div class="inline-information">
+                                <img src="{% static 'images/pbricks.png' %}" width="50px" height="50px"/>
+                            </div>
+                       </div>
+                       <div class="col-md-6">
+                           <div class="inline-comtent">
+                               回复<span style="color:#eb9316">{{ comment.name_pre }}：</span>
+                               <p>{{ comment.content }}</p>
+                           </div>
+                       </div>
+                   </div>
+                   <div class="row">
+                       <div class="inline-footer">
+                           <div class="col-md-7">
+                               <div class="replay-information">
+                                   <p><span style="color:#eb9316">{{ comment.nick_name }}</span></p>
+                               </div>
+                               <div class="date-replay pull-right" style="margin-bottom: 10px">
+                                   <span>{{ comment.pub_data | date:"Y-m-d H:i" }}</span>
+                                   <button class="btn btn-info btn-xs" id="btnInline {{ bug.id }} {{ comment.id }}" data-toggle="modal" data-target="#myModal">回复</button>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           {% endfor %}
+           </div>
+       </div>
+    </article>
+   {% endfor %}
+</div>

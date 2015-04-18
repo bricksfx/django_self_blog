@@ -1,0 +1,113 @@
+{% extends "blog/base.html" %}
+{% load staticfiles %}
+{% load django_markdown %}
+{% load comments %}
+
+
+
+
+{% block title %}bricks_blog{% endblock %}
+    {% block article %}
+        <article class="post tag-about-ghost tag-ghost-in-depth tap-zhu-shou-han-shu">
+            <div class="post-head">
+                <h1 class="post-title">
+                    <h1>{{ blog.title }}</h1>
+                </h1>
+            </div>
+            <span class="auther">
+                作者
+                <a href="#">bricks</a>
+            </span>
+            <time class="date" datetime="2015-4-1">{{ blog.publish_time }}</time>
+             <div class="post-content">
+                <div>{{ blog.body|markdown | safe }}</div>
+             </div>
+             <div class="post-footer clearfix">
+                <hr/>
+                    <div class="pull-left tag-list"></div>
+                        <img src="{% static 'images/label2.png' %}">
+                            {% for tags in blog.tag.all %}
+                                <a href="{% url 'blog:blog_tag' tags.id %}">{{ tags }}</a>
+                            {% endfor %}
+             </div>
+
+
+        </article>
+    {% endblock %}
+    {% block comment %}
+        <div class="col-xs-12 col-md-8 comment">
+           <div class="comment-posted" id="comment-posted">
+                <div class="comments">
+                <a id="sub-relocate"></a>
+                 <a name="blog_comments" id="comments"></a>
+                 {% get_comment_count for blog as comment_count %}
+                 <div class="comments_nav"><h2>评论({{ comment_count }})</h2></div>
+                 {% ifequal comment_count 0 %}
+                    <div class="comments_body">
+                        <div class="comments_container"><h2>没有评论</h2></div>
+                    </div>
+                 {% else %}
+                     {% get_comment_list for blog as comments %}
+                     {% for comment in comments %}
+                        <div class="comment_container">
+                            <div class="comment-head">
+                            <div class="comments_id"><a href="{{ comment.user_url }}"><img src="{% static "images/pbricks.png" %}" width="42" height="42"/></a></div>
+                                <span class="li_small_2">{{ comment.user_name }}</span>
+                                <span class="li_small_2">{{ comment.submit_date | date:"Y-m-d H:i" }}</span>
+                            </div>
+                            <div class="comment_content">{{ comment.comment }}</div>
+                        </div>
+
+                     {% endfor %}
+                 {% endifequal %}
+             </div>
+           </div>
+
+            <div class="comments_body" id="comment_form">
+                <div class="comments_nav"><h2>新的评论</h2></div>
+                {% get_comment_form for blog as blog_form %}
+                <div class="comments-content">
+                <form class="form-horizontal" action="{% comment_form_target %}" method="post" id="cmt_sub_form">
+                    {% csrf_token %}
+                    {{ blog_form.object_pk }}
+                    {{ blog_form.content_type }}
+                    {{ blog_form.timestamp }}
+                    {{ blog_form.submit_date }}
+                    {{ blog_form.security_hash }}
+                    <div class="form-group">
+                        <label class="control-label" for="id_name">用户名</label>
+                        <input type="text" id="id_name" class="form-control" name="name" required="required" placeholder="请输入您的用户名"/>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="id_email">邮箱</label>
+
+                        <input type="email" id="id_email" class="form-control" name="email" required="required" placeholder="请输入您的邮箱地址"/>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="id_url">个人网站</label>
+
+                        <input type="url" id="id_url" class="form-control" name="url" placeholder="请输入您的网址" required="required"/>
+
+                    </div>
+                    <a name="newcomment" id="newcomment"></a>
+                    <div class="form-group">
+                        <label class="control-label" for="id_comment">评论</label>
+
+                        <textarea class="form-control" row="5" id="id_comment" name="comment" placeholder="请输入评论内容" required="required"></textarea>
+
+                    </div>
+                    <p style="display:none"><label for="id_honeypot">如果你在该字段输入任何内容，您的评论会被视为垃圾评论</label><input type="text" name="honeypot" id="id_honeyot"></p>
+                    <div class="form-actions">
+                        <input class="btn btn-info" id="submit_btn" type="submit" value="提交"/>
+                        <input type="hidden" name="next" value="{% url 'blog:blog_detail' blog.id %}#sub-relocate"/>
+                    </div>
+                </form>
+                </div>
+            </div>
+        </div>
+
+    {% endblock %}
+
+

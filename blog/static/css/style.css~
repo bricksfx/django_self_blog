@@ -1,0 +1,17 @@
+body{
+    color:#efd;
+    background:blueviolet;
+    padding:0 5em;
+    margin:0
+}
+h1{
+    padding:2em 1em;
+    background:white url("images/LOGO.png")no-repeat;
+}
+h2{
+    color:#bf8;
+    border-top:1px dotted #fff;
+    margin-top:2em}
+p{
+    margin:1em 0
+}

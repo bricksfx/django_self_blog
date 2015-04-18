@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh-CN">
+    {% load staticfiles %}
+    <meta charset="UTF-8">
+    <title>{% block title %}bricks_blog{% endblock %}</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="apple-touch-icon-precomposed" href="http://static.bootcss.com/www/assets/ico/apple-touch-icon-precomposed.png">
+    <link rel="shortcut icon" href="{% static "images/bricks.png" %}">
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+</head>
+<body class="home-template">
+{#    <div style="background-color: black; width: 100%; height:100px; position: absolute;z-index:1000 "></div>#}
+
+    <header class="main-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-xs-12">
+                    <a class="branding" href="{% url 'blog:blog_index'  %}" title="bricks_blog">
+                        <img src="{% static "images/superman.png" %}">
+                        <h2 class="sr-only">bricksBlog</h2>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+    <nav class="main-navigation">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-xs-12">
+                    <div class="navbar-header">
+                        <span class="navbar-toggle-botton collapse" data-target="#main-menu">
+                            <span class="sr-only">Taggle navigation</span>
+                            <i class="fa fa-bars"></i>
+                        </span>
+                    </div>
+                    <div class="collapse navbar-collapse" id="main-menu">
+                        <ul class="menu">
+                            <li class="nav-current" role="presentation">
+                                <a href="{% url 'blog:blog_index'  %}">首页</a>
+                            </li>
+                            <li role="presentation">
+                                <a href="http://blog.csdn.net/u011437680">csdn链接</a>
+                            </li>
+                            <li role="presentation">
+                                <a href="#">吐槽bug</a>
+                            </li>
+                            <li role="presentation">
+                                <a href="#">下载</a>
+                            </li>
+                            <li role="presentation">
+                                <a href="#">关于</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    {% block modal %}
+    {% endblock %}
+    <section class="contant-wrap">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-xs-12" id="id_article">
+                   {% block article %}
+                    {% endblock %}
+                </div>
+                <aside class="col-md-4 col-xs-12 sidebar">
+                    <div class="widget">
+                        <h4 class="title">关于博主</h4>
+                        <div class="community">
+                            <p>qq:252142844</p>
+                            <p>微信:bricksfx</p>
+                            <p>
+                                <a href="#">关于作者</a>
+                            </p>
+                            <p>
+                                <a href="#">提问作者</a>
+                            </p>
+                        </div>
+
+                    </div>
+                     <div class="widget">
+                            <h4>下载</h4>
+                            <div class="content download">
+
+                                <a href="#" class="btn btn-default btn-block">博客源码（0.1.1）</a>
+                            </div>
+
+                        </div>
+                        <div class="widget">
+                            <h4 class="title">标签云</h4>
+                            <div class="content tag-cloud">
+                                {% for tag in tags %}
+                                <a href="{% url 'blog:blog_tag' tag.id %}">{{ tag.tag }}</a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                 </aside>
+            </div>
+        </div>
+        <div class="post-comment">
+            <div class="container">
+                <div class="row">
+                    <div class="container">
+                        {% block comment %}
+                        {% endblock %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 col-xs-12">
+                        <div class="widget">
+                            <h4 class="title">最新文章</h4>
+                            <div class="recent-post">
+                            {% for blog in newBlog %}
+                            <div class="recent-single-post">
+                                <a href="{% url 'blog:blog_detail' blog.id %}" class="post-title">{{ blog.title }}</a>
+                                <p>{{ blog.created }}</p>
+                            </div>
+                            {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-xs-12">
+                        <div class="widget">
+                            <h4 class="title">标签云</h4>
+                            <div class="content tag-cloud">
+                                {% for tag in tags %}
+                                    <a href="{% url 'blog:blog_tag' tag.id %}">{{ tag.tag }}</a>
+                                {% endfor %}
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-xs-12">
+                            <div class="widget">
+                                <h4 class="title">学习网站</h4>
+                                <div class="content tag-cloud frend-links">
+                                    <a href="http://www.bootcss.com/">Bootstrap中文网</a>
+                                </div>
+                                <div class="content tag-cloud frend-links">
+                                    <a href="https://www.djangoproject.com/">django官网</a>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% block script %}
+{% endblock %}
+<div class="contioner" style="background-color: #202020">
+    <div class="row">
+        <div class="col-md-12 col-xs-12">
+            <div class="col-md-4 col-xs-12 col-md-offset-4">
+                <p style="text-align: center; color:#ebebeb">豫ICP备15002086号</p>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
