@@ -32,7 +32,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <button type="submit" id="comment-submit" class="btn btn-primary">评论</button>
+                    <button type="submit" id="comment-submit" class="btn btn-primary">提交</button>
                 </div>
             </div>
         </div>
@@ -164,26 +164,30 @@
                     var type=1;
                     var parent_bug = string[1];
                     var comment_bug = string[2];
-                    data_to_server = {type:type, parent_bug:parent_bug};
+                    data_to_server = {type:type, parent_bug:parent_bug, comment_bug:comment_bug};
                 }
 
             });
             $("#myModal #comment-submit").on('click', function(){
                 $("#myModal #comment-submit").attr('disabled', 'disabled');
+                $("#myModal #comment-submit").html('<span class="glyphicon glyphicon-hourglass" aria-hidden="true"></span>提交中')
                 var name = $("#myModal #id_name").val();
                 var content = $("#myModal #id_content").val();
                 if (name != "" && content == ""){
                     $('#myModal #miss_content').attr('class', 'alert alert-danger');
                     $("#myModal #comment-submit").removeAttr('disabled');
+                    $("#myModal #comment-submit").html("提交")
                 }
                 else if(name == "" && content != ""){
                     $('#myModal #miss_name').attr('class', 'alert alert-danger');
                     $("#myModal #comment-submit").removeAttr('disabled');
+                    $("#myModal #comment-submit").html("提交")
                 }
                 else if(content=="" && name==""){
                     $('#myModal #miss_content').attr('class', 'alert alert-danger');
                     $('#myModal #miss_name').attr('class', 'alert alert-danger');
                     $("#myModal #comment-submit").removeAttr('disabled');
+                    $("#myModal #comment-submit").html("提交")
                 }
                 else{
                     data_to_server.name = name;
@@ -201,8 +205,6 @@
                             else{
                                 var jsonObj = new Array();
                                 jsonObj = JSON.parse(result);
-                                console.log(jsonObj);
-                                $("#myModal").modal("hide");
                                 var htmlreverse = '<div class="inline-replay" id="bugInline_' +jsonObj.comment_id + '" style="margin-top: 10px; border-bottom:dotted #c5c5c5 1px;">' +
                                 '                   <div class="row">' +
                                 '                       <div class="col-md-1">' +
@@ -236,7 +238,8 @@
                             var inline_id = "bug_inline_" + jsonObj.bug_id;
                             $("myModal").modal("toggle");
                             $("#myModal #comment-submit").removeAttr('disabled');
-                            $("#" + bug_id +" #bug_inline").append(htmlreverse);
+                            $("#myModal #comment-submit").html("提交");
+                            $("#" + bug_id +" #bug_inline").prepend(htmlreverse);
                         },
                         error: function (result) {
                             alert("false" + result);
