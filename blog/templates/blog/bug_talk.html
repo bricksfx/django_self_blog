@@ -71,7 +71,7 @@
                </div>
            </div>
 
-           <div class="container" id="bug_inline_{{ bug.id }}">
+           <div class="container" id="bug_inline">
            {% for comment in bug.bugtalkinline_set.all %}
                <div class="inline-replay" id="bugInline_{{ comment.id }}" style="margin-top: 10px; border-bottom:dotted #c5c5c5 1px;">
                    <div class="row">
@@ -146,10 +146,15 @@
             $.ajaxSetup({
                  data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
             });
-
+            $("#myModal").on("show.bs.modal", function(){
+                    $('#myModal #miss_name').attr('class', 'sr-only');
+                    $('#myModal #miss_content').attr('class', 'sr-only');
+                    $("#myModal #id_name").val('');
+                    $("#myModal #id_content").val('');
+            });
+            var data_to_server = new Object();
             $("button[id^='btn']").on('click',function(){
                 var string=$(this).attr("id").split(' ');
-                var data_to_server = new Object();
                 if (string[0] == "btnTop") {
                     var type = 0;
                     var parent_bug = string[1];
@@ -160,91 +165,85 @@
                     var parent_bug = string[1];
                     var comment_bug = string[2];
                     data_to_server = {type:type, parent_bug:parent_bug};
-
                 }
-                $("#myModal").on("show.bs.modal", function(){
-                    $('#myModal #miss_name').attr('class', 'sr-only');
-                    $('#myModal #miss_content').attr('class', 'sr-only');
-                    $("#myModal #id_name").val('');
-                    $("#myModal #id_content").val('');
-                });
-                $("#myModal #comment-submit").on('click', function(){
-                    var name = $("#myModal #id_name").val();
-                    var content = $("#myModal #id_content").val();
-                    if (name != "" && content == ""){
-                        $('#myModal #miss_content').attr('class', 'alert alert-danger');
-                    }
-                    else if(name == "" && content != ""){
-                        $('#myModal #miss_name').attr('class', 'alert alert-danger');
-                    }
-                    else if(content=="" && name==""){
-                        $('#myModal #miss_content').attr('class', 'alert alert-danger');
-                        $('#myModal #miss_name').attr('class', 'alert alert-danger');
-                    }
-                    else{
-                        data_to_server.name = name;
-                        data_to_server.content = content;
-                        $.ajax({
-                            type:"POST",
-                            data:data_to_server,
-                            url:"{% url 'blog:bug_submit_inline' %}",
-                            catch:false,
-                            dataType:"html",
-                            success: function(result){
-                                if (result == "false") {
-                                    alert("评论出现问题");
-                                }
-                                else{
-                                    var jsonObj = new Array();
-                                    jsonObj = JSON.parse(result);
-                                    console.log(jsonObj);
-                                    $("#myModal").modal("hide");
-                                    var htmlreverse = '<div class="inline-replay" id="bugInline_' +jsonObj.conment_id + '" style="margin-top: 10px; border-bottom:dotted #c5c5c5 1px;">' +
-                                    '                   <div class="row">' +
-                                    '                       <div class="col-md-1">' +
-                                    '                            <div class="inline-information">' +
-                                    '                                <img src="{% static 'images/pbricks.png' %}" width="50px" height="50px"/>' +
-                                    '                            </div>' +
-                                    '                       </div>' +
-                                    '                       <div class="col-md-6">' +
-                                    '                           <div class="inline-comtent">' +
-                                    '                               回复<span style="color:#eb9316">' +jsonObj.name_pre+ '：</span>' +
-                                    '                               <p>' +jsonObj.content+ '</p>' +
-                                    '                           </div>' +
-                                    '                       </div>' +
-                                    '                   </div>' +
-                                    '                   <div class="row">' +
-                                    '                       <div class="inline-footer">' +
-                                    '                           <div class="col-md-7">' +
-                                    '                               <div class="replay-information">' +
-                                    '                                   <p><span style="color:#eb9316">' +jsonObj.nick_name+ '</span></p>' +
-                                    '                               </div>' +
-                                    '                               <div class="date-replay pull-right" style="margin-bottom: 10px">' +
-                                    '                                   <span>' +jsonObj.pub_date+ '</span>' +
-                                    '                                   <button class="btn btn-info btn-xs" id="btnInline ' +jsonObj.bug_id+ ' ' +jsonObj.comment_id+ '" data-toggle="modal" data-target="#myModal">回复</button>' +
-                                    '                               </div>' +
-                                    '                           </div>' +
-                                    '                       </div>' +
-                                    '                   </div>' +
-                                    '               </div>'
-                                };
 
-                                var bug_id = "#bug_" + jsonObj.bug_id;
-                                console.log(bug_id);
-                                var inline_id = "#bug_inline_" + jsonObj.bug_id;
-                                console.log(inline_id);
-                                $("#" + bug_id).replaceWith("<h1>test</h1>");
-
-                            },
-                            error: function (result) {
-                                alert("false" + result);
+            });
+            $("#myModal #comment-submit").on('click', function(){
+                $("#myModal #comment-submit").attr('disabled', 'disabled');
+                var name = $("#myModal #id_name").val();
+                var content = $("#myModal #id_content").val();
+                if (name != "" && content == ""){
+                    $('#myModal #miss_content').attr('class', 'alert alert-danger');
+                    $("#myModal #comment-submit").removeAttr('disabled');
+                }
+                else if(name == "" && content != ""){
+                    $('#myModal #miss_name').attr('class', 'alert alert-danger');
+                    $("#myModal #comment-submit").removeAttr('disabled');
+                }
+                else if(content=="" && name==""){
+                    $('#myModal #miss_content').attr('class', 'alert alert-danger');
+                    $('#myModal #miss_name').attr('class', 'alert alert-danger');
+                    $("#myModal #comment-submit").removeAttr('disabled');
+                }
+                else{
+                    data_to_server.name = name;
+                    data_to_server.content = content;
+                    $.ajax({
+                       type:"POST",
+                        data:data_to_server,
+                        url:"{% url 'blog:bug_submit_inline' %}",
+                        catch:false,
+                        dataType:"html",
+                        success: function(result){
+                            if (result == "false") {
+                                alert("评论出现问题");
                             }
-                        });
-                        return false;
-                    }
-
-
-                });
+                            else{
+                                var jsonObj = new Array();
+                                jsonObj = JSON.parse(result);
+                                console.log(jsonObj);
+                                $("#myModal").modal("hide");
+                                var htmlreverse = '<div class="inline-replay" id="bugInline_' +jsonObj.comment_id + '" style="margin-top: 10px; border-bottom:dotted #c5c5c5 1px;">' +
+                                '                   <div class="row">' +
+                                '                       <div class="col-md-1">' +
+                                '                            <div class="inline-information">' +
+                                '                                <img src="{% static 'images/pbricks.png' %}" width="50px" height="50px"/>' +
+                                '                            </div>' +
+                                '                       </div>' +
+                                '                       <div class="col-md-6">' +
+                                '                           <div class="inline-comtent">' +
+                                '                               回复<span style="color:#eb9316">' +jsonObj.name_pre+ '：</span>' +
+                                '                               <p>' +jsonObj.content+ '</p>' +
+                                '                           </div>' +
+                                '                       </div>' +
+                                '                   </div>' +
+                                '                   <div class="row">' +
+                                '                       <div class="inline-footer">' +
+                                '                           <div class="col-md-7">' +
+                                '                               <div class="replay-information">' +
+                                '                                   <p><span style="color:#eb9316">' +jsonObj.nick_name+ '</span></p>' +
+                                '                               </div>' +
+                                '                               <div class="date-replay pull-right" style="margin-bottom: 10px">' +
+                                '                                   <span>' +jsonObj.pub_date+ '</span>' +
+                                '                                   <button class="btn btn-info btn-xs" id="btnInline ' +jsonObj.bug_id+ ' ' +jsonObj.comment_id+ '" data-toggle="modal" data-target="#myModal">回复</button>' +
+                                '                               </div>' +
+                                '                           </div>' +
+                                '                       </div>' +
+                                '                   </div>' +
+                                '               </div>'
+                            };
+                            var bug_id = "bug_" + jsonObj.bug_id;
+                            var inline_id = "bug_inline_" + jsonObj.bug_id;
+                            $("myModal").modal("toggle");
+                            $("#myModal #comment-submit").removeAttr('disabled');
+                            $("#" + bug_id +" #bug_inline").append(htmlreverse);
+                        },
+                        error: function (result) {
+                            alert("false" + result);
+                        }
+                    });
+                    return false;
+                }
             });
 
             $("#comment_form form").submit(function(){
@@ -273,7 +272,7 @@
                         alert("false");
                     }
                 });
-                $("#comment_form form #submit_btn").removeAttr('disabled', 'disabled');
+                $("#comment_form form #submit_btn").removeAttr('disabled');
                 $("#comment_form form #submit_btn").html("提交");
                 return false;
             });
