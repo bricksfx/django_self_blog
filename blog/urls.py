@@ -9,11 +9,5 @@ urlpatterns = patterns('',
     url(r'^bugTalk/', bug_talk, name='bug_talk'),
     url(r'^bugSubmit/$', bug_submit, name='bug_submit'),
     url(r'^bugSubmitInline/$', bug_submit_inline, name='bug_submit_inline'),
-    url(r'^comments_upload/$', comments_upload, name='comments_upload'),
-    url(r'^jqtest/$', jqtest, name='jqtest'),
-    url(r'^jqget/$', jqget, name='jqget'),
-    url(r'^jqpost/$', jqpost, name='jqpost'),
-    url(r'^jqform/$', jqform, name='jqform'),
-    url(r'modal/$', test_modal, name='modal'),
 )
 

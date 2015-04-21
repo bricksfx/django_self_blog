@@ -66,6 +66,7 @@
                        <div class="bug-footer pull-right" style="margin-bottom:10px">
                             <span style="margin-right: 20px">{{ bug.pub_data | date:"Y-m-d H:i" }}</span>
                             <button class="btn btn-info btn-sm" id="btnTop {{ bug.id }}" data-toggle="modal" data-target="#myModal">回复</button>
+{#                            <button class="btn btn-info btn-sm" id="btnTop {{ bug.id }}">回复</button>#}
                        </div>
                    </div>
                </div>
@@ -96,6 +97,7 @@
                                <div class="date-replay pull-right" style="margin-bottom: 10px">
                                    <span>{{ comment.pub_data | date:"Y-m-d H:i" }}</span>
                                    <button class="btn btn-info btn-xs" id="btnInline {{ bug.id }} {{ comment.id }}" data-toggle="modal" data-target="#myModal">回复</button>
+{#                                   <button class="btn btn-info btn-xs" id="btnInline {{ bug.id }} {{ comment.id }}">回复</button>#}
                                </div>
                            </div>
                        </div>
@@ -142,10 +144,15 @@
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/json2.js' %}"></script>
     <script>
+        function clickHandler(){
+            alert("不能自己对自己进行评论，由于木有用户系统，刷新一次你随意~");
+        }
         $(document).ready(function(){
+
             $.ajaxSetup({
                  data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
             });
+
             $("#myModal").on("show.bs.modal", function(){
                     $('#myModal #miss_name').attr('class', 'sr-only');
                     $('#myModal #miss_content').attr('class', 'sr-only');
@@ -153,20 +160,33 @@
                     $("#myModal #id_content").val('');
             });
             var data_to_server = new Object();
+            $("#myModal").on("hidden.bs.modal",function(){
+                for (var item in data_to_server){
+                    delete data_to_server[item]
+                }
+            });
+            $("button").on('click',function(){
+                console.log("button按下时间被触发");
+            })
             $("button[id^='btn']").on('click',function(){
+                console.log("按钮点击被触发");
                 var string=$(this).attr("id").split(' ');
                 if (string[0] == "btnTop") {
                     var type = 0;
                     var parent_bug = string[1];
-                    data_to_server = {type:type, parent_bug:parent_bug};
+                    data_to_server.type = 0;
+                    data_to_server.parent_bug = parent_bug;
+                    console.log(data_to_server);
                 }
                 else{
                     var type=1;
                     var parent_bug = string[1];
                     var comment_bug = string[2];
-                    data_to_server = {type:type, parent_bug:parent_bug, comment_bug:comment_bug};
+                    data_to_server.type=1;
+                    data_to_server.parent_bug = parent_bug;
+                    data_to_server.comment_bug = comment_bug;
+                    console.log(data_to_server);
                 }
-
             });
             $("#myModal #comment-submit").on('click', function(){
                 $("#myModal #comment-submit").attr('disabled', 'disabled');
@@ -192,8 +212,9 @@
                 else{
                     data_to_server.name = name;
                     data_to_server.content = content;
+                    console.log(data_to_server);
                     $.ajax({
-                       type:"POST",
+                        type:"POST",
                         data:data_to_server,
                         url:"{% url 'blog:bug_submit_inline' %}",
                         catch:false,
@@ -227,7 +248,7 @@
                                 '                               </div>' +
                                 '                               <div class="date-replay pull-right" style="margin-bottom: 10px">' +
                                 '                                   <span>' +jsonObj.pub_date+ '</span>' +
-                                '                                   <button class="btn btn-info btn-xs" id="btnInline ' +jsonObj.bug_id+ ' ' +jsonObj.comment_id+ '" data-toggle="modal" data-target="#myModal">回复</button>' +
+                                '                                   <button class="btn btn-info btn-xs" id="btnInline ' +jsonObj.bug_id+ ' ' +jsonObj.comment_id+ '" onclick="clickHandler()"}>回复</button>' +
                                 '                               </div>' +
                                 '                           </div>' +
                                 '                       </div>' +
@@ -236,7 +257,7 @@
                             };
                             var bug_id = "bug_" + jsonObj.bug_id;
                             var inline_id = "bug_inline_" + jsonObj.bug_id;
-                            $("myModal").modal("toggle");
+                            $("#myModal").modal("toggle");
                             $("#myModal #comment-submit").removeAttr('disabled');
                             $("#myModal #comment-submit").html("提交");
                             $("#" + bug_id +" #bug_inline").prepend(htmlreverse);
@@ -245,6 +266,8 @@
                             alert("false" + result);
                         }
                     });
+                    $("#myModal #comment-submit").removeAttr('disabled');
+                    $("#myModal #comment-submit").html("提交");
                     return false;
                 }
             });

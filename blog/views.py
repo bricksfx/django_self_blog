@@ -18,7 +18,7 @@ def blogDetail(request, blog_id):
         raise Http404
     tags = Tag.objects.all()
     newBlog = Article.objects.published()[:3]
-    return render(request, 'blog/blog2.html', {'blog': blog, 'tags': tags, 'newBlog': newBlog})
+    return render(request, 'blog/blog.html', {'blog': blog, 'tags': tags, 'newBlog': newBlog})
 
 def tag(request, tag_id):
     try:
@@ -51,29 +51,14 @@ def blog_show_comment(request, blog_id):
 
         return JsonResponse(data_returned)
 
-    return render(request, 'blog/blog_comments_show.html', {'blog': blog})
+    else:
+        raise Http404
 
 def bug_talk(request):
     tags = Tag.objects.all()
     newBlog = Article.objects.published()[:3]
     bugs = BugTalk.objects.all()
     return render(request, 'blog/bug_talk.html', {'tags': tags, 'newBlog': newBlog, 'bugs': bugs})
-
-def jqtest(request):
-    return render(request, 'blog/jqtest.html', {})
-
-def jqget(request):
-    return HttpResponse("test")
-def jqpost(request):
-
-    if request.method == 'POST':
-        print "it's a test of post"
-        name =  request.POST['name']
-        city = request.POST['city']
-        strReturnToclient = "my name is: " + name + " and I live in " + city
-        return HttpResponse(strReturnToclient)
-    else:
-        return HttpResponse("post")
 
 def bug_submit(request):
     if request.method == 'POST':
@@ -100,12 +85,12 @@ def bug_submit_inline(request):
             name = request.POST['name']
             content = request.POST['content']
         except KeyError, ex:
-            print ex
+            print "error", ex
             return HttpResponse("false")
         try:
             parent_bug_object = BugTalk.objects.get(id=int(parent_bug))
         except BugTalk.DoesNotExist, ex:
-            print ex
+            print "error", ex
             return HttpResponse("false")
         name_pre = ""
         if int(type) == 0:
@@ -115,9 +100,10 @@ def bug_submit_inline(request):
                 comment_bug = request.POST['comment_bug']
                 comment_bug_object = BugTalkInline.objects.get(id=int(comment_bug))
             except (KeyError, BugTalkInline.DoesNotExist), ex:
-                print ex
+                print "error", ex
                 return HttpResponse("false")
             name_pre = comment_bug_object.nick_name
+        print name_pre
 
         try:
             comment_bug = BugTalkInline()
@@ -126,8 +112,8 @@ def bug_submit_inline(request):
             comment_bug.nick_name = name
             comment_bug.content = content
             comment_bug.save()
-        except BaseException , ex:
-            print ex;
+        except BaseException, ex:
+            print "error", ex
             return HttpResponse("false")
         import pytz
         pub_date = unicode(comment_bug.pub_data)[0:-16]                #TODO datatime优化
@@ -140,22 +126,6 @@ def bug_submit_inline(request):
 def jqform(request):
     return HttpResponse("it's a test of jqform")
 
-
-import json
-def comments_upload(request):
-    if request.method == 'POST':
-        print "it's a test"
-
-        name = request.POST['name']
-        password = request.POST['password']
-        print name, password
-        return_dict = {'name': name, 'password':password}
-        return JsonResponse(return_dict)
-    else:
-        return HttpResponse("<h1>test</h1>")
-
-def test_modal(request):
-    return render(request, "blog/modal.html", {})
 
 #TODO 分页
 #TODO 数据库查询优化
