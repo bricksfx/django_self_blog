@@ -9,5 +9,6 @@ urlpatterns = patterns('',
     url(r'^bugTalk/', bug_talk, name='bug_talk'),
     url(r'^bugSubmit/$', bug_submit, name='bug_submit'),
     url(r'^bugSubmitInline/$', bug_submit_inline, name='bug_submit_inline'),
+    url(r'^about/(?P<about_id>\d+)/$', about, name='about'),
 )
 

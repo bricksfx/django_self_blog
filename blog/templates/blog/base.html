@@ -4,7 +4,6 @@
     {% load staticfiles %}
     <meta charset="UTF-8">
     <title>{% block title %}bricks_blog{% endblock %}</title>
-
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="apple-touch-icon-precomposed" href="http://static.bootcss.com/www/assets/ico/apple-touch-icon-precomposed.png">
     <link rel="shortcut icon" href="{% static "images/bricks.png" %}">
@@ -42,16 +41,16 @@
                                 <a href="{% url 'blog:blog_index'  %}">首页</a>
                             </li>
                             <li role="presentation">
-                                <a href="http://blog.csdn.net/u011437680">csdn链接</a>
+                                <a href="http://blog.csdn.net/u011437680" target="_blank">csdn链接</a>
                             </li>
                             <li role="presentation">
-                                <a href="{% url 'blog:bug_talk' %}">吐槽bug</a>
+                                <a href="{% url 'blog:bug_talk' %}" target="_blank">吐槽bug</a>
                             </li>
                             <li role="presentation">
-                                <a href="#">下载</a>
+                                <a href="https://github.com/bricksfx/django_self_blog" target="_blank">下载</a>
                             </li>
                             <li role="presentation">
-                                <a href="#">关于</a>
+                                <a href="{% url 'blog:about' 1 %}">关于</a>
                             </li>
                         </ul>
                     </div>
@@ -70,15 +69,15 @@
                 </div>
                 <aside class="col-md-4 col-xs-12 sidebar">
                     <div class="widget">
-                        <h4 class="title">关于博主</h4>
+                        <h4 class="title">关于本站</h4>
                         <div class="community">
                             <p>qq:252142844</p>
                             <p>微信:bricksfx</p>
                             <p>
-                                <a href="#">关于作者</a>
+                                <a href="{% url 'blog:about' 2 %}">关于博主</a>
                             </p>
                             <p>
-                                <a href="#">提问作者</a>
+                                <a href="{% url 'blog:bug_talk' %}" target="_blank">发现bug</a>
                             </p>
                         </div>
 
@@ -87,7 +86,7 @@
                             <h4>下载</h4>
                             <div class="content download">
 
-                                <a href="#" class="btn btn-default btn-block">博客源码（0.1.1）</a>
+                                <a href="https://github.com/bricksfx/django_self_blog" target="_blank" class="btn btn-default btn-block">博客源码（0.0.0）</a>
                             </div>
 
                         </div>

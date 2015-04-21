@@ -5,10 +5,11 @@ html, body{
 }
 .main-header{
     text-align:center;
-    padding-top: 42px;
-    padding-right: 0;
-    padding-left: 0;
-    padding-bottom: 42px;
+    padding:42px 0;
+    /*padding-top: 42px;*/
+    /*padding-right: 0;*/
+    /*padding-left: 0;*/
+    /*padding-bottom: 42px;*/
     background: #ffffff;
 }
 .main-header .branding{
@@ -38,7 +39,7 @@ a:active, a:focus, a img, a h2
     margin-bottom: 35px;
 }
 .main-navigation .menu{
-    padding: 0px;
+    padding: 0;
     margin: 0;
 }
 .main-navigation .menu li.nav-current{
@@ -77,7 +78,7 @@ a:active, a:focus, a img, a h2
 }
 .post .post-head .post-title .post-meta{
     color: #959595;
-    margin: 14px 0 0px;
+    margin: 14px 0 0;
 }
 /*
 .post-content{
@@ -102,7 +103,7 @@ a:active, a:focus, a img, a h2
 .post .post-footer{
     margin-top: 30px;
     border-top: 1px;
-    solid #ebebeb;
+    solid: #ebebeb;
     padding: 21px 0 0;
 }
 .post .post-footer hr{

@@ -83,3 +83,13 @@ class BugTalkInline(models.Model):
         verbose_name = "吐槽bug回复"
         verbose_name_plural = "吐槽bug回复"
         ordering = ["-pub_data"]
+
+class About(models.Model):
+    title = models.CharField(max_length=20)
+    body = MarkdownField()
+
+    def __unicode__(self):
+        return self.title
+    class Meta:
+        verbose_name = "关于我们"
+        verbose_name_plural = "关于我们"

@@ -1,7 +1,7 @@
 #coding=utf8
 from django.shortcuts import render
 from django.http import HttpResponse, Http404
-from blog.models import Article, ArticleQueryset, Tag, Comment, BugTalk, BugTalkInline
+from blog.models import Article, ArticleQueryset, Tag, Comment, BugTalk, BugTalkInline, About
 from django import forms
 from django.http import JsonResponse
 
@@ -126,6 +126,15 @@ def bug_submit_inline(request):
 def jqform(request):
     return HttpResponse("it's a test of jqform")
 
+def about(request, about_id):
+    try:
+        about = About.objects.get(id=int(about_id))
+    except About.DoesNotExist:
+        raise Http404
+
+    tags = Tag.objects.all()
+    newBlog = Article.objects.published()[:3]
+    return render(request, 'blog/about.html', {'tags': tags, 'newBlog': newBlog, 'about': about})
 
 #TODO 分页
 #TODO 数据库查询优化
