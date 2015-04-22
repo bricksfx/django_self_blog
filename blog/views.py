@@ -103,7 +103,6 @@ def bug_submit_inline(request):
                 print "error", ex
                 return HttpResponse("false")
             name_pre = comment_bug_object.nick_name
-        print name_pre
 
         try:
             comment_bug = BugTalkInline()
@@ -115,6 +114,7 @@ def bug_submit_inline(request):
         except BaseException, ex:
             print "error", ex
             return HttpResponse("false")
+	print "数据库存储操作成功"
         pub_date = unicode(comment_bug.pub_data)[0:-16]                #TODO datatime优化
         data_return = {"comment_id": comment_bug.id,
                         "name_pre": name_pre, "nick_name": name, "bug_id": parent_bug, "content": content,

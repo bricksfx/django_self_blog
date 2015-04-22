@@ -165,6 +165,9 @@
                     delete data_to_server[item]
                 }
             });
+            $("button").on('click',function(){
+                console.log("button按下时间被触发");
+            })
             $("button[id^='btn']").on('click',function(){
                 console.log("按钮点击被触发");
                 var string=$(this).attr("id").split(' ');
