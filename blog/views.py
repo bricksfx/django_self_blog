@@ -115,7 +115,6 @@ def bug_submit_inline(request):
         except BaseException, ex:
             print "error", ex
             return HttpResponse("false")
-        import pytz
         pub_date = unicode(comment_bug.pub_data)[0:-16]                #TODO datatime优化
         data_return = {"comment_id": comment_bug.id,
                         "name_pre": name_pre, "nick_name": name, "bug_id": parent_bug, "content": content,
