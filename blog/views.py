@@ -4,6 +4,7 @@ from django.http import HttpResponse, Http404
 from blog.models import Article, ArticleQueryset, Tag, Comment, BugTalk, BugTalkInline, About
 from django import forms
 from django.http import JsonResponse
+from django.utils.html import escape, escapejs
 
 def BlogIndex(request):
     blog_list = Article.objects.published()
@@ -114,7 +115,7 @@ def bug_submit_inline(request):
         except BaseException, ex:
             print "error", ex
             return HttpResponse("false")
-	print "数据库存储操作成功"
+        content = escape(content)
         pub_date = unicode(comment_bug.pub_data)[0:-16]                #TODO datatime优化
         data_return = {"comment_id": comment_bug.id,
                         "name_pre": name_pre, "nick_name": name, "bug_id": parent_bug, "content": content,
@@ -139,5 +140,6 @@ def about(request, about_id):
 #TODO 数据库查询优化
 #TODO 多级评论模块完善
 #TODO datatime优化
-#TODO delete ALL test tiles
+#TODO delete ALL test Files
+#TODO catch优化
 
