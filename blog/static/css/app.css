@@ -38,6 +38,7 @@ a:active, a:focus, a img, a h2
     border-bottom: 3px solid #e1e1e1;
     margin-bottom: 35px;
 }
+
 .main-navigation .menu{
     padding: 0;
     margin: 0;
@@ -57,12 +58,13 @@ a:active, a:focus, a img, a h2
     display: block;
     padding:0 21px;
 }
+
 .post{
     padding: 35px;
     background: #ffffff;
     margin-bottom: 35px;
     position:relative;
-    overflow: hidden;
+    overflow: scroll;
 }
 .post .post-head{
     text-align: center;
@@ -201,7 +203,7 @@ a:active, a:focus, a img, a h2
     padding: 20px;
     margin-bottom:35px;
     position: relative;
-    overflow:hidden;
+    overflow: scroll;
 }
 .post-comment .comment .comment-posted .comment_container .comment-head{
     background: #ebebeb;
@@ -226,4 +228,7 @@ a:active, a:focus, a img, a h2
 .post-comment .comment .comments_body .comments-content{
     margin:35px;
 }
-
+.found_new_bug{
+    position: fixed;
+    z-index: 100;
+}

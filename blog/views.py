@@ -45,6 +45,7 @@ def blog_show_comment(request, blog_id):
             import datetime
             date = unicode(datetime.datetime.now())[0:-13]                  #TODO datatype优化
             date = u' ' + date
+            content = unicode(escape(content))
             data_returned = {"name": name, "content": content, "date": date}
         except Exception, ex:
             print ex
@@ -115,7 +116,8 @@ def bug_submit_inline(request):
         except BaseException, ex:
             print "error", ex
             return HttpResponse("false")
-        content = escape(content)
+        content = unicode(escape(content))
+        print content
         pub_date = unicode(comment_bug.pub_data)[0:-16]                #TODO datatime优化
         data_return = {"comment_id": comment_bug.id,
                         "name_pre": name_pre, "nick_name": name, "bug_id": parent_bug, "content": content,
@@ -142,4 +144,7 @@ def about(request, about_id):
 #TODO datatime优化
 #TODO delete ALL test Files
 #TODO catch优化
+#TODO 多级评论ajax完善
+
+
 

@@ -2,7 +2,9 @@
 {% load staticfiles %}
 
 {% block modal %}
-    <a href="#new_button_href"><button id="new_bug" class="btn btn-info btn-lg" style="margin-bottom: 35px;">发现本站新的bug</button></a>
+    <div class="found_new_bug">
+        <a href="#new_button_href"><button id="new_bug" class="btn btn-info btn-lg" style="margin-bottom: 35px;">发现本站新的bug</button></a>
+    </div>
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -140,8 +142,6 @@
 {% endblock %}
 
 {% block script %}
-    <script src="{% static 'jquery/jquery.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/json2.js' %}"></script>
     <script>
         function clickHandler(){
@@ -162,7 +162,7 @@
             var data_to_server = new Object();
             $("#myModal").on("hidden.bs.modal",function(){
                 for (var item in data_to_server){
-                    delete data_to_server[item]
+                    delete data_to_server[item];
                 }
             });
             $("button").on('click',function(){
@@ -257,13 +257,13 @@
                             };
                             var bug_id = "bug_" + jsonObj.bug_id;
                             var inline_id = "bug_inline_" + jsonObj.bug_id;
-                            $("#myModal").modal("toggle");
+                            $("#myModal").modal('hide');
                             $("#myModal #comment-submit").removeAttr('disabled');
                             $("#myModal #comment-submit").html("提交");
                             $("#" + bug_id +" #bug_inline").prepend(htmlreverse);
                         },
                         error: function (result) {
-                            alert("false" + result);
+                            alert("服务器端出现问题");
                         }
                     });
                     $("#myModal #comment-submit").removeAttr('disabled');
