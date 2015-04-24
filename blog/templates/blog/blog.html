@@ -37,6 +37,12 @@
                                 '<div class="comment_content">' +jsonObj.content+ '</div></div>';
 
                             $(".comment-posted").append(replace_html);
+                            var comment_count = $(".comment-posted .comments_nav #comment_count").text()
+                            var count = parseInt(comment_count);
+                            if (count == 0) {
+                                $(".comment-posted .comments .comments_body").remove()
+                            }
+                            $(".comment-posted .comments_nav #comment_count").text(count+1);
 
                         }
                         else{
@@ -80,21 +86,19 @@
                                 <a href="{% url 'blog:blog_tag' tags.id %}">{{ tags }}</a>
                             {% endfor %}
              </div>
-
-
         </article>
     {% endblock %}
     {% block comment %}
         <div class="col-xs-12 col-md-8 comment">
            <div class="comment-posted" id="comment-posted">
-                <div class="comments" id="sub-change">
+              <div class="comments" id="sub-change">
                 <a id="sub-relocate"></a>
                  <a name="blog_comments" id="comments"></a>
 
-                 <div class="comments_nav"><h2>评论({{ blog.comment_set.count }})</h2></div>
+                 <div class="comments_nav"><h3>评论(<span id="comment_count">{{ blog.comment_set.count }}</span>)</h3></div>
                  {% ifequal blog.comment_set.count 0 %}
                     <div class="comments_body">
-                        <div class="comments_container"><h2>没有评论</h2></div>
+                        <div class="comments_container"><h3>没有评论</h3></div>
                     </div>
                  {% else %}
                      {% for comment in blog.comment_set.all %}
