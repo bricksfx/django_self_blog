@@ -40,6 +40,11 @@
         </div>
     </div>
 
+
+
+{% endblock %}
+{% block paginator %}
+    <div class="container">
     <nav>
         <ul class="pagination">
             {% if bugs.has_previous %}
@@ -48,20 +53,37 @@
                     <span aria-hidden="true">上一页</span>
                 </a>
             </li>
+            {% else %}
+            <li class="disabled">
+                <a href="#" aria-label="Previous">
+                    <span aria-hidden="true">上一页</span>
+                </a>
+            </li>
             {% endif %}
             {% for num in page_num %}
-            <li><a href="{{ num }}">{{ num }}</a></li>
+                {% if num == bugs.number %}
+                <li class="active"><a href="?page={{ num }}">{{ num }}</a></li>
+                {% else %}
+                <li><a href="?page={{ num }}">{{ num }}</a></li>
+                {% endif %}
             {% endfor %}
+            {% if bugs.has_next %}
             <li>
-                {% if bugs.has_next %}
+
                 <a href="?page={{ bugs.next_page_number }}" aria-label="Next">
+                    <span aria-hidden="true">下一页</span>
+                </a>
+            </li>
+            {% else %}
+            <li class="disabled">
+                <a href="#" aria-label="Next">
                     <span aria-hidden="true">下一页</span>
                 </a>
                 {% endif %}
             </li>
         </ul>
      </nav>
-
+    </div>
 {% endblock %}
 
 {% block title %}bricks_blog{% endblock %}
@@ -141,19 +163,36 @@
                     <span aria-hidden="true">上一页</span>
                 </a>
             </li>
+            {% else %}
+            <li class="disabled">
+                <a href="#" aria-label="Previous">
+                    <span aria-hidden="true">上一页</span>
+                </a>
+            </li>
             {% endif %}
             {% for num in page_num %}
-            <li><a href="{{ num }}">{{ num }}</a></li>
+                {% if num == bugs.number %}
+                <li class="active"><a href="?page={{ num }}">{{ num }}</a></li>
+                {% else %}
+                <li><a href="?page={{ num }}">{{ num }}</a></li>
+                {% endif %}
             {% endfor %}
+            {% if bugs.has_next %}
             <li>
-                {% if bugs.has_next %}
+
                 <a href="?page={{ bugs.next_page_number }}" aria-label="Next">
+                    <span aria-hidden="true">下一页</span>
+                </a>
+            </li>
+            {% else %}
+            <li class="disabled">
+                <a href="#" aria-label="Next">
                     <span aria-hidden="true">下一页</span>
                 </a>
                 {% endif %}
             </li>
         </ul>
-     </nav>
+    </nav>
 {% endblock %}
 
 {% block comment %}
