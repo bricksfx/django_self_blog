@@ -39,6 +39,29 @@
             </div>
         </div>
     </div>
+
+    <nav>
+        <ul class="pagination">
+            {% if bugs.has_previous %}
+            <li>
+                <a href="?page={{ bugs.previous_page_number }}" aria-label="Previous">
+                    <span aria-hidden="true">上一页</span>
+                </a>
+            </li>
+            {% endif %}
+            {% for num in page_num %}
+            <li><a href="{{ num }}">{{ num }}</a></li>
+            {% endfor %}
+            <li>
+                {% if bugs.has_next %}
+                <a href="?page={{ bugs.next_page_number }}" aria-label="Next">
+                    <span aria-hidden="true">下一页</span>
+                </a>
+                {% endif %}
+            </li>
+        </ul>
+     </nav>
+
 {% endblock %}
 
 {% block title %}bricks_blog{% endblock %}
@@ -110,6 +133,27 @@
        </div>
     </article>
     {% endfor %}
+    <nav>
+        <ul class="pagination">
+            {% if bugs.has_previous %}
+            <li>
+                <a href="?page={{ bugs.previous_page_number }}" aria-label="Previous">
+                    <span aria-hidden="true">上一页</span>
+                </a>
+            </li>
+            {% endif %}
+            {% for num in page_num %}
+            <li><a href="{{ num }}">{{ num }}</a></li>
+            {% endfor %}
+            <li>
+                {% if bugs.has_next %}
+                <a href="?page={{ bugs.next_page_number }}" aria-label="Next">
+                    <span aria-hidden="true">下一页</span>
+                </a>
+                {% endif %}
+            </li>
+        </ul>
+     </nav>
 {% endblock %}
 
 {% block comment %}

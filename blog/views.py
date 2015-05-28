@@ -5,6 +5,7 @@ from blog.models import Article, ArticleQueryset, Tag, Comment, BugTalk, BugTalk
 from django import forms
 from django.http import JsonResponse
 from django.utils.html import escape, escapejs
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 def BlogIndex(request):
     blog_list = Article.objects.published()
@@ -43,7 +44,7 @@ def blog_show_comment(request, blog_id):
             new_comment.content = content
             new_comment.save()
             import datetime
-            date = unicode(datetime.datetime.now())[0:-13]                  #TODO datatype优化
+            date = unicode(datetime.datetime.now())[0:-13]                     #TODO datatype优化
             date = u' ' + date
             content = unicode(escape(content))
             data_returned = {"name": name, "content": content, "date": date}
@@ -59,8 +60,19 @@ def blog_show_comment(request, blog_id):
 def bug_talk(request):
     tags = Tag.objects.all()
     newBlog = Article.objects.published()[:3]
-    bugs = BugTalk.objects.all()
-    return render(request, 'blog/bug_talk.html', {'tags': tags, 'newBlog': newBlog, 'bugs': bugs})
+    bugs_list = BugTalk.objects.all()
+    paginator = Paginator(bugs_list, 5)
+    page_num = range(1, paginator.num_pages+1)
+    page = request.GET.get('page')
+    try:
+        bugs = paginator.page(page)
+    except PageNotAnInteger, ex:
+        bugs = paginator.page(1)
+    except EmptyPage:
+        bugs = paginator.page(paginator.num_pages)
+
+    return render(request, 'blog/bug_talk.html', {'tags': tags, 'newBlog': newBlog, 'bugs': bugs, 'page_num': page_num})
+
 
 def bug_submit(request):
     if request.method == 'POST':
@@ -138,7 +150,7 @@ def about(request, about_id):
     newBlog = Article.objects.published()[:3]
     return render(request, 'blog/about.html', {'tags': tags, 'newBlog': newBlog, 'about': about})
 
-#TODO 分页
+#TODO 分页                   now adding
 #TODO 数据库查询优化
 #TODO 多级评论模块完善
 #TODO datatime优化
