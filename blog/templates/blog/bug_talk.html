@@ -309,6 +309,8 @@
                             else{
                                 var jsonObj = new Array();
                                 jsonObj = JSON.parse(result);
+                                datetest = jsonObj.pub_date.getYear;
+                                console.log("datetest:" + datetest);
                                 var htmlreverse = '<div class="inline-replay" id="bugInline_' +jsonObj.comment_id + '" style="margin-top: 10px; border-bottom:dotted #c5c5c5 1px;">' +
                                 '                   <div class="row">' +
                                 '                       <div class="col-md-1">' +
@@ -330,7 +332,7 @@
                                 '                                   <p><span style="color:#eb9316">' +jsonObj.nick_name+ '</span></p>' +
                                 '                               </div>' +
                                 '                               <div class="date-replay pull-right" style="margin-bottom: 10px">' +
-                                '                                   <span>' +jsonObj.pub_date+ '</span>' +
+                                '                                   <span>' + jsonObj.pub_date.toLocaleString() + '</span>' +
                                 '                                   <button class="btn btn-info btn-xs" id="btnInline ' +jsonObj.bug_id+ ' ' +jsonObj.comment_id+ '" onclick="clickHandler()"}>回复</button>' +
                                 '                               </div>' +
                                 '                           </div>' +

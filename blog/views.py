@@ -7,6 +7,11 @@ from django.http import JsonResponse
 from django.utils.html import escape, escapejs
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
+
+def cover(request):
+    return render(request, 'blog/cover.html', {})
+
+
 def BlogIndex(request):
     blog_list = Article.objects.published()
     tags = Tag.objects.all()
@@ -130,7 +135,7 @@ def bug_submit_inline(request):
             return HttpResponse("false")
         content = unicode(escape(content))
         print content
-        pub_date = unicode(comment_bug.pub_data)[0:-16]                #TODO datatime优化
+        pub_date = comment_bug.pub_data        #TODO datatime优化
         data_return = {"comment_id": comment_bug.id,
                         "name_pre": name_pre, "nick_name": name, "bug_id": parent_bug, "content": content,
                         "pub_date": pub_date}
